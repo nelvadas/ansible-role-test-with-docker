@@ -1,0 +1,4 @@
+# inventory
+[helloserver]
+cnt001 image="alpy:latest"
+

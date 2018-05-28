@@ -1,0 +1,3 @@
+---
+# defaults file for roles/helloworld
+tmpFile: /tmp/hello.txt

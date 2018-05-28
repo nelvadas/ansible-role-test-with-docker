@@ -1,0 +1,6 @@
+# Install a role from GitHub
+# ansible-galaxy install -r requirement.yml
+
+- name: provision_docker
+  src: https://github.com/chrismeyersfsu/provision_docker.git
+

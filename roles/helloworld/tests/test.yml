@@ -1,0 +1,24 @@
+---
+- name: Bring up docker containers
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: provision_docker
+      provision_docker_inventory_group: "{{ groups['helloserver'] }}"
+
+
+- name: Play HelloWorld Role
+  hosts: helloserver
+  roles:
+    - helloworld
+
+- name: Verify Tests
+  hosts: helloserver
+  vars:
+    - tmpFile: "/tmp/hello.txt"
+  tasks:
+    - name: "Assert {{ tmpFile }} exists"
+      stat:
+        path: "{{ tmpFile }}"
+      register: assertFileExist
+      failed_when: assertFileExist.stat.exists == false
