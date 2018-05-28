@@ -1,4 +1,5 @@
 #Testing Ansible Roles with docker containers
+--------------------------------------------
 
 The purpose of this tutorial is to show you how you can leverage docker to Automgially provision container 
 to test an ansible role.
@@ -45,7 +46,7 @@ the task responsible of the file creation is hosted in the helloword/tasks/main.
 
 *How can we test the following role using ansible and Docker?*
 
-# Docker_provision role
+# docker_provision role
 Chris Meyer provides a [docker_provision](https://github.com/chrismeyersfsu/provision_docker/) role to provision a docker container for an inventory machine 
 pull the role in your project's role using ansible galaxy or a traditionnal git clone command
 
@@ -86,11 +87,32 @@ $ tree
 3 directories, 4 files
 ```
 * The Dockerfile contains a set of instruction used to prepared containers images ( not mandatory) you can relies on your own images
+```
+  4 FROM alpine
+  5
+  6 RUN apk add --update \
+  7     python \
+  8     python-dev \
+  9     py-pip \
+ 10     build-base \
+ 11   && pip install virtualenv \
+ 12   && rm -rf /var/cache/apk/*
+```
+From a regular alpine, we some python utilities, to enable ansible fact gathering for example.
+Then build a mix called alpy:= alpine + python :)
+```
+$ docker build -t alpy:latest .
+```
+
+
 * The inventory file will be used to pass the inventory variables when running the test.yml playbook
 ```
-
+   # inventory
+   [helloserver]
+   cnt001 image="alpy:latest"
 ```
-
+in our inventory we declare on host in the helloserver category: a docker container with name cnt001 will be created to mock this role using the prebuilt
+alpy:latest image.
 
 * test.yml contains various instructions to : Provision docker containers based on inventory declration, run the playbook on thoses container and verify assertions
 
