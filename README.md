@@ -149,7 +149,9 @@ alpy:latest image.
  21       stat:
  22         path: "{{ tmpFile }}"
  23       register: assertFileExist
- 24       failed_when: assertFileExist.stat.exists == false ```
+ 24       failed_when: assertFileExist.stat.exists == false 
+
+```
 
 
 
@@ -168,7 +170,6 @@ here for example we ensure the hello.txt file exists.
 ## Run the playbook
 
 ```
-
 $ ansible-playbook -i inventory test.yml
 
 PLAY [Bring up docker containers] ****************************************************************************************************************************************
