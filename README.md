@@ -1,10 +1,13 @@
-#Testing Ansible Roles with docker containers
+Testing Ansible Roles with docker containers
 --------------------------------------------
 
-The purpose of this tutorial is to show you how you can leverage docker to Automgially provision container 
-to test an ansible role.
-Various initiatives have been started around Ansible tests.
 
+
+
+
+The purpose of this tutorial is to show you how you can leverage docker to Automagically provision container on the fly
+to test an ansible playbooks and roles.
+Various initiatives have been started around Ansible tests.
 
 Let's consider the following *site.yml* playbook with a single *hellworld* role.
 The helloworld role perform one basic action: touch a new file /tmp/file.txt on the host
@@ -47,7 +50,8 @@ the task responsible of the file creation is hosted in the helloword/tasks/main.
 *How can we test the following role using ansible and Docker?*
 
 # docker_provision role
-Chris Meyer provides a [docker_provision](https://github.com/chrismeyersfsu/provision_docker/) role to provision a docker container for an inventory machine 
+
+Chris Meyers provides a [docker_provision](https://github.com/chrismeyersfsu/provision_docker/) role to provision a docker container for an inventory machine 
 pull the role in your project's role using ansible galaxy or a traditionnal git clone command
 
 ```
@@ -59,11 +63,11 @@ In the next sections, we will rely on this docker_provision role to automaticall
 you run the playbook earlier on your localhost. 
 
 
-# Create a test structrue
+# Create a test folder structrue
 Each role created with galaxy has a default *tests* folder.
 create a test.yml file inside the test folder.
 we are going to leverage the roles/helloworld/tests/test.yml to perform a basic Ansible test.
-## Reference tested roles
+## Reference the role to be tested and its dependencies
 The test.yml playbook is intended to test the helloworld role, so in the role subfolder, 
 instead of recreating the entire helloword structure, we are going to create a symbolic link to the existing one
 Do the same for the dependent docker_provision role
@@ -85,7 +89,10 @@ $ tree
 └── test.yml
 
 3 directories, 4 files
+
 ```
+## Provide a test inventory
+
 * The Dockerfile contains a set of instruction used to prepared containers images ( not mandatory) you can relies on your own images
 ```
   4 FROM alpine
@@ -114,6 +121,8 @@ $ docker build -t alpy:latest .
 in our inventory we declare on host in the helloserver category: a docker container with name cnt001 will be created to mock this role using the prebuilt
 alpy:latest image.
 
+## Assemble the blocks in a test playbook
+
 * test.yml contains various instructions to : Provision docker containers based on inventory declration, run the playbook on thoses container and verify assertions
 
 ```
@@ -140,19 +149,18 @@ alpy:latest image.
  21       stat:
  22         path: "{{ tmpFile }}"
  23       register: assertFileExist
- 24       failed_when: assertFileExist.stat.exists == false
-
-```
+ 24       failed_when: assertFileExist.stat.exists == false ```
 
 
 
-## Provision docker containers
+
+### Provision docker containers
 The provision_docker role is invoked to create one docker container for each host listed in helloservergroup
 
-## Trigger the helloworld role tasks
+### Trigger the helloworld role tasks
 After instanciating docker container, we can run the helloworld tasks on helloword docker containers.
 
-## Check some assertions.
+### Check some assertions.
 After the playbook execution, we can perform some checks on the installed containers.
 here for example we ensure the hello.txt file exists.
 
