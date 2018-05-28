@@ -10,8 +10,7 @@ to test an ansible playbooks and roles.
 Various initiatives have been started around Ansible tests.
 
 Let's consider the following *site.yml* playbook with a single *hellworld* role.
-The helloworld role perform one basic action: touch a new file /tmp/file.txt on the host
-
+The helloworld role perform one basic action: touch a new file /tmp/hello.txt on the host
 ```
 ---
 
@@ -31,9 +30,10 @@ PLAY [localhost] ***************************************************************
 
 TASK [Gathering Facts] ******************************************************************************************************************ok: [localhost]
 
-TASK [helloworld : Create /tmp/file.txt] ************************************************************************************************changed: [localhost]
+TASK [helloworld : Create /tmp/hello.txt] ************************************************************************************************changed: [localhost]
 
-PLAY RECAP ***********************************************************localhost                  : ok=2    changed=1    unreachable=0    failed=0
+PLAY RECAP *********************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0
 ```
 the task responsible of the file creation is hosted in the helloword/tasks/main.yml
 
